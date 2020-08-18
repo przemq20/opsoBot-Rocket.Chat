@@ -17,4 +17,7 @@ object Greetings {
 
     s"$randomGreeting <@$name>!"
   }
+  def emptyGreeting(): String = {
+    s"$randomGreeting"
+  }
 }

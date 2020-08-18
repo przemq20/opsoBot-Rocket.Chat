@@ -10,4 +10,6 @@ libraryDependencies ++= Seq("org.jsoup" % "jsoup" % "1.13.1",
   "io.spray" %% "spray-json" % "1.3.5",
   "com.github.slack-scala-client" %% "slack-scala-client" % "0.2.10",
   "org.slf4j" % "slf4j-simple" % "1.6.4",
-  "org.slf4j" % "slf4j-api" % "1.7.5")
+  "org.slf4j" % "slf4j-api" % "1.7.5",
+  "org.scalaj" %% "scalaj-http" % "2.4.2"
+)

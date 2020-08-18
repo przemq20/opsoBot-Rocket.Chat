@@ -10,7 +10,7 @@ object CommandParser {
   val logger: Logger = LoggerFactory.getLogger(CommandParser.getClass)
 
   def greetings(message: Message, client: SlackRtmClient): Unit = {
-   val mess =  commands.Greetings.toString(message.user)
+    val mess = commands.Greetings.toString(message.user)
     client.sendMessage(message.channel, mess)
   }
 
@@ -24,7 +24,7 @@ object CommandParser {
       logger.info("Sent pizza menu")
     }
     else if (command.equals("-joke")) {
-      RandomJoke.sendJoke(message.channel,client)
+      RandomJoke.sendJoke(message.channel, client)
       //      client.sendMessage(message.channel, RandomJoke.randomJoke())
       logger.info("Sent joke")
     }
@@ -49,12 +49,12 @@ object CommandParser {
         client.sendMessage(message.channel, "I can't delete this channel, because it's not on the list")
       }
     }
-    else if (command.equals("-opsoMenu")){
-      sendMenu(message.channel, "OPSO", makePretty(OpsoParser.parse().sort()))
+    else if (command.equals("-opsoMenu")) {
+      sendMenu("OPSO", makePretty(OpsoParser.parse().sort()))
     }
-    else if (command.equals("-olimpMenu")){
+    else if (command.equals("-olimpMenu")) {
       val menu = new Menu
-      sendMenu(message.channel, "Olimp", makePretty(OlimpParser.parse().sort()))
+      sendMenu("Olimp", makePretty(OlimpParser.parse().sort()))
     }
     else {
       val text = s"Sorry, I don't understand \'$command\' :c "
@@ -64,7 +64,7 @@ object CommandParser {
     }
   }
 
-  def makePretty(menu :Seq[(String, List[String])]): String ={
+  def makePretty(menu: Seq[(String, List[String])]): String = {
     val builder = new StringBuilder()
     if (menu.isEmpty) {
       "Menu na dzisiaj jest niedostępne"
