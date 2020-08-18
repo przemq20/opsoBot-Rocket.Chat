@@ -131,3 +131,5 @@ src/main/scala/opsobot/Playground.scala
 
 # ROCKETCHAT
 rocketchat/
+src/main/scala/resources/Credentials.scala
+src/main/scala/resources/
