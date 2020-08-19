@@ -62,7 +62,7 @@ object Bot {
 
           val tenOClock = LocalTime.of(10, 0, 0)
           if (currentTime == tenOClock) {
-            val greeting = returnMessage(s"${commands.Greetings.emptyGreeting()} w $localizedDay! Dzisiaj możesz zamówić PIZZUNIĘ w OPSO. Ponadto, menu na dzisiaj to:")
+            val greeting = returnMessage(s"Cześć w $localizedDay! Dzisiaj możesz zamówić PIZZUNIĘ w OPSO. Ponadto, menu na dzisiaj to:")
             sendToTheRocket(greeting)
             sendMenus()
 
@@ -71,7 +71,7 @@ object Bot {
           || currentDayOfWeek == DayOfWeek.WEDNESDAY) {
           val elevenOClock = LocalTime.of(11, 0, 0)
           if (currentTime == elevenOClock) {
-            val greeting = s"${commands.Greetings.emptyGreeting()} w $localizedDay! Menu na dzisiaj to:"
+            val greeting = returnMessage(s"Cześć w $localizedDay! Menu na dzisiaj to:")
             sendToTheRocket(greeting)
 
             sendMenus()
@@ -100,7 +100,7 @@ object Bot {
   }
 
   def sendMenus(): Unit = {
-    sendMenu("OPSO", makePretty(OlimpParser.parse().sort()))
+    sendMenu("OPSO", makePretty(OpsoParser.parse().sort()))
     sendMenu("Olimp", makePretty(OlimpParser.parse().sort()))
   }
 
@@ -115,7 +115,7 @@ object Bot {
 
   def returnMessage(message: String): String = {
     val rawMessage = message.replace("\n", "\\n").replace("\t", "\u2001" * 3)
-    val mess = "{\"message\": {\"rid\": \"mj2b2pds8Laht8nac\", \"msg\": \"" +
+    val mess = "{\"message\": {\"rid\": \"na2HFLXeRMXGJqpYT\", \"msg\": \"" +
       s" $rawMessage" +
       " \", \"alias\":\"OpsoBot\" }}"
     //    println(mess)
