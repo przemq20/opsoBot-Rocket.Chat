@@ -30,6 +30,7 @@ object Bot {
   import system.dispatcher
 
   def run() {
+    logger.info("OpsoBot started")
 //    Future {
 //      while (true) {
 //
@@ -121,10 +122,11 @@ object Bot {
     val rawMessage = message.replace("\n", "\\n").replace("\t", "\u2001" * 3)
     val mess = "{\"message\": {\"rid\": \"" +
       room +
-      "\", \"msg\": \"" +
+      "\",\"avatar\": \"https://avatars.slack-edge.com/2020-08-07/1281096213222_ad3d6fc601b6e272eb7e_512.png\"," +
+      " \"msg\": \"" +
       rawMessage +
       " \", \"alias\":\"OpsoBot\" }}"
-    //    println(mess)
+        println(mess)
     mess
   }
 
