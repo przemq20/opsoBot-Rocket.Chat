@@ -4,9 +4,9 @@ import java.time.temporal.ChronoUnit
 import java.time.{DayOfWeek, LocalDate, LocalTime}
 import java.util.Calendar
 
-import spray.json.DefaultJsonProtocol.StringJsonFormat
 import spray.json._
 import akka.actor.ActorSystem
+import akka.stream.scaladsl.Source
 import opsobot.bot.CommandParser.{greetings, makePretty}
 import opsobot.parsers.{OlimpParser, OpsoParser}
 import org.slf4j.{Logger, LoggerFactory}
@@ -14,40 +14,43 @@ import resources.Credentials.{token, user}
 import scalaj.http.{Http, HttpOptions}
 import slack.SlackUtil
 import slack.rtm.SlackRtmClient
+import spray.json.DefaultJsonProtocol.{RootJsObjectFormat, StringJsonFormat}
 
+import scala.concurrent.duration._
 import scala.collection.mutable.ListBuffer
 import scala.concurrent.Future
+import scala.util.control.Breaks.{break, breakable}
 
 object Bot {
   var channels: ListBuffer[String] = ListBuffer[String]("")
   implicit val system: ActorSystem = ActorSystem("RocketChat")
   val logger: Logger = LoggerFactory.getLogger(Bot.getClass)
+  val room = "na2HFLXeRMXGJqpYT"
 
   import system.dispatcher
 
-  //  val client: SlackRtmClient = SlackRtmClient(token)
-  //
   def run() {
-    //    Future {
-    //      client.onMessage { message =>
-    //        val mentionedIds = SlackUtil.extractMentionedIds(message.text)
-    //        logger.info(s"Client ID: ${client.getState().self.id}")
-    //        if (mentionedIds.contains(client.getState().self.id)) {
-    //          CommandParser.greetings(message, client)
-    //          val commands = message.text.split(" ").distinct
-    //
-    //          logger.info(s"I received commands: ${commands.mkString("Array(", ", ", ")")}")
-    //          if (commands.length == 1) {
-    //            client.sendMessage(message.channel, "Jeśli potrzebujesz pomocy wpisz \"@opsoolimpbot -help\"")
-    //          }
-    //          else {
-    //            for (command <- commands) {
-    //              CommandParser.parse(command, message, client)
-    //            }
-    //          }
-    //        }
-    //      }
-    //    }
+//    Future {
+//      while (true) {
+//
+//        val lastMessage = getLastMessage
+//        val lastId = lastMessage._1
+//        breakable {
+//          while (lastId != getLastMessage._1) {
+//            val message = getLastMessage._2
+//            if (message.contains("@opsoBot")) {
+//              val commands = message.split(" ").toBuffer
+//              commands -= "@opsoBot"
+//              for(command <- commands) {
+////                CommandParser.parse(command, )
+//              }
+//            }
+//            break
+//          }
+//        }
+//        Thread.sleep(100)
+//      }
+//    }
 
 
     Future {
@@ -105,20 +108,41 @@ object Bot {
   }
 
   def sendToTheRocket(message: String): Unit = {
-    val req = Http("https://chat.czk.comarch.com/api/v1/chat.sendMessage").postData(message
-    ).header("X-Auth-Token", token)
+    val req = Http("https://chat.czk.comarch.com/api/v1/chat.sendMessage").postData(message)
+      .header("X-Auth-Token", token)
       .header("X-User-Id", user)
       .header("Content-type", "application/json")
-      .header("Charset", "UTF-8").option(HttpOptions.readTimeout(10000)).asString
+      .header("Charset", "UTF-8")
+      .option(HttpOptions.readTimeout(10000)).asString
     println(req.body)
   }
 
   def returnMessage(message: String): String = {
     val rawMessage = message.replace("\n", "\\n").replace("\t", "\u2001" * 3)
-    val mess = "{\"message\": {\"rid\": \"na2HFLXeRMXGJqpYT\", \"msg\": \"" +
-      s" $rawMessage" +
+    val mess = "{\"message\": {\"rid\": \"" +
+      room +
+      "\", \"msg\": \"" +
+      rawMessage +
       " \", \"alias\":\"OpsoBot\" }}"
     //    println(mess)
     mess
+  }
+
+  def getLastMessage: (String, String) = {
+    val req = Http(s"https://chat.czk.comarch.com/api/v1/rooms.info?roomId=$room")
+      .header("X-Auth-Token", token)
+      .header("X-User-Id", user)
+      .header("Content-type", "application/json")
+      .header("Charset", "UTF-8")
+
+    //    val id = req.body.toJson.asJsObject().getFields("room").head.toJson.asJsObject().getFields("_id").head.toString()
+    val lastMessage = req.asString.body.parseJson.asJsObject.getFields("room").head
+      .asJsObject.getFields("lastMessage").head
+    val id = lastMessage.asJsObject.getFields("_id").head.convertTo[String]
+    val msg = lastMessage.asJsObject.getFields("msg").head.convertTo[String]
+    //    val uID = lastMessage.asJsObject.getFields("u").head.asJsObject.getFields("_id").head.convertTo[String]
+    println(id, msg)
+
+    (id, msg)
   }
 }
