@@ -61,7 +61,7 @@ object Bot {
           || currentDayOfWeek == DayOfWeek.THURSDAY
           || currentDayOfWeek == DayOfWeek.FRIDAY) {
 
-          val tenOClock = LocalTime.of(10, 23, 30)
+          val tenOClock = LocalTime.of(10, 0, 0)
           if (currentTime == tenOClock) {
             val greeting = returnMessage(s"Witaj w $localizedDay! Dzisiaj możesz zamówić PIZZUNIĘ w OPSO. Ponadto, menu na dzisiaj to:")
             sendToTheRocket(greeting)
