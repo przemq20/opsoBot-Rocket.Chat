@@ -128,7 +128,7 @@ object Bot {
   def returnMessage(message: String): String = {
     val rawMessage = message.replace("\n", "\\n").replace("\t", "\u2001" * 3)
     val mess = "{\"message\": {\"rid\": \"" +
-      room +
+      RC_API.ROOM_ID +
       "\",\"avatar\": \"https://avatars.slack-edge.com/2020-08-07/1281096213222_ad3d6fc601b6e272eb7e_512.png\"," +
       " \"msg\": \"" +
       rawMessage +
