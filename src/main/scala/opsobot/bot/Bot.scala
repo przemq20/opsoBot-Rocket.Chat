@@ -13,8 +13,7 @@ import spray.json.DefaultJsonProtocol.StringJsonFormat
 import spray.json._
 import opsobot.bot.CommandParser.makePretty
 import opsobot.parsers.{OlimpParser, OpsoParser}
-import resources.Credentials.{token, user}
-import resources.{COMARCH_RC_API, CredentialsTrait, PROD_ENV_CREDENTIALS, RocketChatApiUrl, TEST_ENV_CREDENTIALS, TEST_ENV_RC_API}
+import resources.{TEST_ENV_CREDENTIALS, TEST_ENV_RC_API}
 
 object Bot {
   import system.dispatcher
@@ -23,7 +22,7 @@ object Bot {
   var channels: ListBuffer[String] = ListBuffer[String]("")
   val logger: Logger = LoggerFactory.getLogger(Bot.getClass)
 
-  final val CREDENTIALS:  CredentialsTrait = TEST_ENV_CREDENTIALS
+  final val CREDENTIALS:  Credentials = TEST_ENV_CREDENTIALS
   final val RC_API:       RocketChatApiUrl = TEST_ENV_RC_API
 
   def run() {
