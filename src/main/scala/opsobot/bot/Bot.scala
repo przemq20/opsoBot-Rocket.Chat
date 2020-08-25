@@ -1,28 +1,30 @@
 package opsobot.bot
 
+import scala.collection.mutable.ListBuffer
+import scala.concurrent.Future
 import java.time.temporal.ChronoUnit
 import java.time.{DayOfWeek, LocalDate, LocalTime}
 import java.util.Calendar
 
 import akka.actor.ActorSystem
-import opsobot.bot.CommandParser.makePretty
-import opsobot.parsers.{OlimpParser, OpsoParser}
 import org.slf4j.{Logger, LoggerFactory}
-import resources.Credentials.{token, user}
 import scalaj.http.{Http, HttpOptions}
 import spray.json.DefaultJsonProtocol.StringJsonFormat
 import spray.json._
-
-import scala.collection.mutable.ListBuffer
-import scala.concurrent.Future
+import opsobot.bot.CommandParser.makePretty
+import opsobot.parsers.{OlimpParser, OpsoParser}
+import resources.Credentials.{token, user}
+import resources.{COMARCH_RC_API, CredentialsTrait, PROD_ENV_CREDENTIALS, RocketChatApiUrl, TEST_ENV_CREDENTIALS, TEST_ENV_RC_API}
 
 object Bot {
-  var channels: ListBuffer[String] = ListBuffer[String]("")
-  implicit val system: ActorSystem = ActorSystem("RocketChat")
-  val logger: Logger = LoggerFactory.getLogger(Bot.getClass)
-  val room = "na2HFLXeRMXGJqpYT"
-
   import system.dispatcher
+  implicit val system: ActorSystem = ActorSystem("RocketChat")
+
+  var channels: ListBuffer[String] = ListBuffer[String]("")
+  val logger: Logger = LoggerFactory.getLogger(Bot.getClass)
+
+  final val CREDENTIALS:  CredentialsTrait = TEST_ENV_CREDENTIALS
+  final val RC_API:       RocketChatApiUrl = TEST_ENV_RC_API
 
   def run() {
     logger.info("OpsoBot started")
@@ -60,7 +62,7 @@ object Bot {
           || currentDayOfWeek == DayOfWeek.THURSDAY
           || currentDayOfWeek == DayOfWeek.FRIDAY) {
 
-          val tenOClock = LocalTime.of(10, 0, 0)
+          val tenOClock = LocalTime.of(10, 23, 30)
           if (currentTime == tenOClock) {
             val greeting = returnMessage(s"Witaj w $localizedDay! Dzisiaj możesz zamówić PIZZUNIĘ w OPSO. Ponadto, menu na dzisiaj to:")
             sendToTheRocket(greeting)
@@ -104,10 +106,19 @@ object Bot {
     sendMenu("Olimp", makePretty(OlimpParser.parse().sort()))
   }
 
+  //  def sendToTheRocket(message: String): Unit = {
+  //    val req = Http("https://chat.czk.comarch.com/api/v1/chat.sendMessage").postData(message)
+  //      .header("X-Auth-Token", token)
+  //      .header("X-User-Id", user)
+  //      .header("Content-type", "application/json")
+  //      .header("Charset", "UTF-8")
+  //      .option(HttpOptions.readTimeout(10000)).asString
+  //    logger.info(req.body)
+  //  }
   def sendToTheRocket(message: String): Unit = {
-    val req = Http("https://chat.czk.comarch.com/api/v1/chat.sendMessage").postData(message)
-      .header("X-Auth-Token", token)
-      .header("X-User-Id", user)
+    val req = Http(RC_API.SEND_MESSAGE).postData(message)
+      .header("X-Auth-Token", CREDENTIALS.TOKEN)
+      .header("X-User-Id", CREDENTIALS.USER_ID)
       .header("Content-type", "application/json")
       .header("Charset", "UTF-8")
       .option(HttpOptions.readTimeout(10000)).asString
@@ -126,9 +137,12 @@ object Bot {
   }
 
   def getLastMessage: (String, String) = {
-    val req = Http(s"https://chat.czk.comarch.com/api/v1/rooms.info?roomId=$room")
-      .header("X-Auth-Token", token)
-      .header("X-User-Id", user)
+    //    val req = Http(s"https://chat.czk.comarch.com/api/v1/rooms.info?roomId=$room")
+    val req = Http(RC_API.ROOM_ID)
+      //      .header("X-Auth-Token", token)
+      //      .header("X-User-Id", user)
+      .header("X-Auth-Token", CREDENTIALS.TOKEN)
+      .header("X-User-Id", CREDENTIALS.USER_ID)
       .header("Content-type", "application/json")
       .header("Charset", "UTF-8")
 
