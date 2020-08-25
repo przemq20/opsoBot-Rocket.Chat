@@ -4,22 +4,17 @@ import java.time.temporal.ChronoUnit
 import java.time.{DayOfWeek, LocalDate, LocalTime}
 import java.util.Calendar
 
-import spray.json._
 import akka.actor.ActorSystem
-import akka.stream.scaladsl.Source
-import opsobot.bot.CommandParser.{greetings, makePretty}
+import opsobot.bot.CommandParser.makePretty
 import opsobot.parsers.{OlimpParser, OpsoParser}
 import org.slf4j.{Logger, LoggerFactory}
 import resources.Credentials.{token, user}
 import scalaj.http.{Http, HttpOptions}
-import slack.SlackUtil
-import slack.rtm.SlackRtmClient
-import spray.json.DefaultJsonProtocol.{RootJsObjectFormat, StringJsonFormat}
+import spray.json.DefaultJsonProtocol.StringJsonFormat
+import spray.json._
 
-import scala.concurrent.duration._
 import scala.collection.mutable.ListBuffer
 import scala.concurrent.Future
-import scala.util.control.Breaks.{break, breakable}
 
 object Bot {
   var channels: ListBuffer[String] = ListBuffer[String]("")
@@ -31,30 +26,31 @@ object Bot {
 
   def run() {
     logger.info("OpsoBot started")
-//    Future {
-//      while (true) {
-//
-//        val lastMessage = getLastMessage
-//        val lastId = lastMessage._1
-//        breakable {
-//          while (lastId != getLastMessage._1) {
-//            val message = getLastMessage._2
-//            if (message.contains("@opsoBot")) {
-//              val commands = message.split(" ").toBuffer
-//              commands -= "@opsoBot"
-//              for(command <- commands) {
-////                CommandParser.parse(command, )
-//              }
-//            }
-//            break
-//          }
-//        }
-//        Thread.sleep(100)
-//      }
-//    }
+    //    Future {
+    //      while (true) {
+    //
+    //        val lastMessage = getLastMessage
+    //        val lastId = lastMessage._1
+    //        breakable {
+    //          while (lastId != getLastMessage._1) {
+    //            val message = getLastMessage._2
+    //            if (message.contains("@opsoBot")) {
+    //              val commands = message.split(" ").toBuffer
+    //              commands -= "@opsoBot"
+    //              for(command <- commands) {
+    ////                CommandParser.parse(command, )
+    //              }
+    //            }
+    //            break
+    //          }
+    //        }
+    //        Thread.sleep(100)
+    //      }
+    //    }
 
 
     Future {
+      logger.info("Thread sending daily updates started")
       while (true) {
         val currentDayOfWeek = LocalDate.now.getDayOfWeek
         val currentTime = LocalTime.now.truncatedTo(ChronoUnit.SECONDS)
@@ -66,19 +62,20 @@ object Bot {
 
           val tenOClock = LocalTime.of(10, 0, 0)
           if (currentTime == tenOClock) {
-            val greeting = returnMessage(s"Cześć w $localizedDay! Dzisiaj możesz zamówić PIZZUNIĘ w OPSO. Ponadto, menu na dzisiaj to:")
+            val greeting = returnMessage(s"Witaj w $localizedDay! Dzisiaj możesz zamówić PIZZUNIĘ w OPSO. Ponadto, menu na dzisiaj to:")
             sendToTheRocket(greeting)
             sendMenus()
+            logger.info("Menu sent")
 
           }
         } else if (currentDayOfWeek == DayOfWeek.MONDAY
           || currentDayOfWeek == DayOfWeek.WEDNESDAY) {
           val elevenOClock = LocalTime.of(11, 0, 0)
           if (currentTime == elevenOClock) {
-            val greeting = returnMessage(s"Cześć w $localizedDay! Menu na dzisiaj to:")
+            val greeting = returnMessage(s"Witaj w $localizedDay! Menu na dzisiaj to:")
             sendToTheRocket(greeting)
-
             sendMenus()
+            logger.info("Menu sent")
 
           }
         }
@@ -99,7 +96,6 @@ object Bot {
     sb.addAll("\n")
     val message = returnMessage(sb.result())
     sendToTheRocket(message)
-    //    client.sendMessage(channel, sb.result())
     logger.info(s"Sent menu, date: ${Calendar.getInstance().getTime}")
   }
 
@@ -115,7 +111,7 @@ object Bot {
       .header("Content-type", "application/json")
       .header("Charset", "UTF-8")
       .option(HttpOptions.readTimeout(10000)).asString
-    println(req.body)
+    logger.info(req.body)
   }
 
   def returnMessage(message: String): String = {
@@ -126,7 +122,6 @@ object Bot {
       " \"msg\": \"" +
       rawMessage +
       " \", \"alias\":\"OpsoBot\" }}"
-        println(mess)
     mess
   }
 
@@ -143,7 +138,6 @@ object Bot {
     val id = lastMessage.asJsObject.getFields("_id").head.convertTo[String]
     val msg = lastMessage.asJsObject.getFields("msg").head.convertTo[String]
     //    val uID = lastMessage.asJsObject.getFields("u").head.asJsObject.getFields("_id").head.convertTo[String]
-    println(id, msg)
 
     (id, msg)
   }

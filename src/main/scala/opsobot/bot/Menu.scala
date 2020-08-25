@@ -1,7 +1,6 @@
 package opsobot.bot
 
 import scala.collection.mutable
-import scala.collection.mutable.ListBuffer
 
 class Menu() {
   val sortingOrder: List[String] = List[String]("Śniadania", "Zupy", "Danie mięsne lub rybne", "Dania z mięsem", "Dania z ryb", "Dania wegetariańskie",

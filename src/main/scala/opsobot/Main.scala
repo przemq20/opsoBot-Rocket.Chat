@@ -1,8 +1,6 @@
 package opsobot
 
 import opsobot.bot.Bot
-import opsobot.bot.TestBot
-import opsobot.parsers.{OlimpParser, OpsoParser}
 
 object Main {
   def main(args: Array[String]): Unit = {
