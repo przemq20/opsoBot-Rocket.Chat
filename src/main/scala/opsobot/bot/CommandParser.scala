@@ -1,7 +1,7 @@
 package opsobot.bot
 
 import opsobot.bot.Bot.sendMenu
-import opsobot.parsers.{OlimpParser, OpsoParser}
+import opsobot.parsers.{Menu, OlimpParser, OpsoParser}
 import org.slf4j.{Logger, LoggerFactory}
 import slack.models.Message
 import slack.rtm.SlackRtmClient
