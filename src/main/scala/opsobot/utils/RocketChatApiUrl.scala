@@ -1,4 +1,4 @@
-package opsobot.bot
+package opsobot.utils
 
 trait RocketChatApiUrl {
   val HOST: String
@@ -8,7 +8,6 @@ trait RocketChatApiUrl {
   val ROOM_ID: String
 
   def SEND_MESSAGE = s"$CORE_URL/chat.sendMessage"
+
   def ROOMS_INFO = s"$CORE_URL/rooms.info?roomId=$ROOM_ID"
 }
-
-

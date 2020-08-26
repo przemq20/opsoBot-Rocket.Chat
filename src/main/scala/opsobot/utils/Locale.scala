@@ -1,4 +1,4 @@
-package opsobot.bot
+package opsobot.utils
 
 import java.time.DayOfWeek
 

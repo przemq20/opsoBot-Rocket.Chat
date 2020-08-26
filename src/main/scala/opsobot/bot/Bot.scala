@@ -13,6 +13,7 @@ import spray.json.DefaultJsonProtocol.StringJsonFormat
 import spray.json._
 import opsobot.bot.CommandParser.makePretty
 import opsobot.parsers.{OlimpParser, OpsoParser}
+import opsobot.utils.{Credentials, Locale, RocketChatApiUrl}
 import resources.{TEST_ENV_CREDENTIALS, TEST_ENV_RC_API}
 
 object Bot {
@@ -27,28 +28,6 @@ object Bot {
 
   def run() {
     logger.info("OpsoBot started")
-    //    Future {
-    //      while (true) {
-    //
-    //        val lastMessage = getLastMessage
-    //        val lastId = lastMessage._1
-    //        breakable {
-    //          while (lastId != getLastMessage._1) {
-    //            val message = getLastMessage._2
-    //            if (message.contains("@opsoBot")) {
-    //              val commands = message.split(" ").toBuffer
-    //              commands -= "@opsoBot"
-    //              for(command <- commands) {
-    ////                CommandParser.parse(command, )
-    //              }
-    //            }
-    //            break
-    //          }
-    //        }
-    //        Thread.sleep(100)
-    //      }
-    //    }
-
 
     Future {
       logger.info("Thread sending daily updates started")
@@ -105,15 +84,6 @@ object Bot {
     sendMenu("Olimp", makePretty(OlimpParser.parse().sort()))
   }
 
-  //  def sendToTheRocket(message: String): Unit = {
-  //    val req = Http("https://chat.czk.comarch.com/api/v1/chat.sendMessage").postData(message)
-  //      .header("X-Auth-Token", token)
-  //      .header("X-User-Id", user)
-  //      .header("Content-type", "application/json")
-  //      .header("Charset", "UTF-8")
-  //      .option(HttpOptions.readTimeout(10000)).asString
-  //    logger.info(req.body)
-  //  }
   def sendToTheRocket(message: String): Unit = {
     val req = Http(RC_API.SEND_MESSAGE).postData(message)
       .header("X-Auth-Token", CREDENTIALS.TOKEN)
@@ -136,10 +106,7 @@ object Bot {
   }
 
   def getLastMessage: (String, String) = {
-    //    val req = Http(s"https://chat.czk.comarch.com/api/v1/rooms.info?roomId=$room")
     val req = Http(RC_API.ROOM_ID)
-      //      .header("X-Auth-Token", token)
-      //      .header("X-User-Id", user)
       .header("X-Auth-Token", CREDENTIALS.TOKEN)
       .header("X-User-Id", CREDENTIALS.USER_ID)
       .header("Content-type", "application/json")
