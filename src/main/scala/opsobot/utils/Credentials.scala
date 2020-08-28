@@ -1,7 +1,19 @@
 package opsobot.utils
 
-trait Credentials {
-  def TOKEN: String
-  def USER_ID: String
-  def AVATAR = "https://avatars.slack-edge.com/2020-08-07/1281096213222_ad3d6fc601b6e272eb7e_512.png"
+import com.typesafe.config.{Config, ConfigFactory}
+
+import scala.util.Properties
+import scala.util.Properties.envOrElse
+
+import scala.sys.process._
+
+object Credentials {
+  val credentialsFile: String = scala.util.Properties.envOrElse("CREDENTIALS", "test_env.conf")
+  private final val config: Config = ConfigFactory
+    .load(credentialsFile)
+    .getConfig("opsobot.credentials")
+
+  final val TOKEN: String = config.getString("token")
+  final val USER_ID: String = config.getString("user_id")
+  final val AVATAR: String = config.getString("avatar")
 }
