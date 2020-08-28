@@ -4,7 +4,7 @@ import scala.collection.mutable
 
 class Menu() {
   private val sortingOrder: List[String] = List[String]("Śniadania", "Zupy", "Danie mięsne lub rybne", "Dania z mięsem", "Dania z ryb", "Dania wegetariańskie",
-    "Dania wegańskie", "Dodatki", "Sałatka lub surówka", "Desery", "Napoje")
+    "Dania wegańskie", "Pizza", "Dodatki", "Sałatka lub surówka", "Desery", "Napoje")
 
   private val data: mutable.Map[String, List[String]] = mutable.Map[String, List[String]]()
 
@@ -36,7 +36,8 @@ class Menu() {
       "Menu na dzisiaj jest niedostępne"
     }
     else {
-      data.foreach(category => {
+      val sorted = this.sort()
+      sorted.foreach(category => {
         val categoryName = category._1
         val dishesList = category._2
         builder.addAll(categoryName)
