@@ -95,14 +95,27 @@ class StreamBot {
     s"""{"message": {"rid": "${RCEnvironment.ROOM_ID}", "avatar": "${Credentials.AVATAR}", "msg": "$rawMessage ", "alias": "OpsoBot"}}"""
   }
 
+  def schedule(schedules: Seq[String], ref: ActorRef, msg: MenuMessage)(implicit system: ActorSystem): LocalDateTime = {
+    val scheduler = QuartzSchedulerExtension(system)
+    var closestDate = LocalDateTime.MAX
+    schedules.foreach(schedule => {
+      val date = scheduler.schedule(schedule, ref, msg)
+      if (dateToLocalDT(date).isBefore(closestDate)) {
+        closestDate = dateToLocalDT(date)
+      }
+    })
+    closestDate
+  }
+
   def run(): Unit = {
     implicit val system: ActorSystem = ActorSystem("reader")
     implicit val materializer: ActorMaterializer = ActorMaterializer()
     implicit val ec: ExecutionContextExecutor = system.dispatcher
 
     val scheduler = QuartzSchedulerExtension(system)
-    val scheduleName = "Every10Seconds"
-    val scheduleName2 = "Every10Seconds2"
+    val schedules = List("MondaysAndWednesdays", "PizzaDays")
+    val MonWedScheduleName = "MondaysAndWednesdays"
+    val PizzadayScheduleName = "PizzaDays"
 
     val sendGreeting: Flow[MenuMessage, MenuMessage, NotUsed] =
       Flow[MenuMessage].map(sendGreetings).map(sendMenusWrapper)
@@ -110,6 +123,7 @@ class StreamBot {
     val source = Source.actorRef(10, OverflowStrategy.dropHead)
     val ref: ActorRef = sendGreeting.to(Sink.foreach{msg => println(msg.content)}).runWith(source)
 
+    case object Tick
     val msg = PizzadayMenuMessage(new Menu()
       .addToCategory("Zupy", "Pomidorowa" :: "Ogórkowa" :: Nil)
       .addToCategory("Dodatki", "Frytki" :: "Ryż" :: Nil)
@@ -120,12 +134,15 @@ class StreamBot {
       .addToCategory("Dania wegańskie", "Pizza z makaronem" :: Nil)
     )
 
-    val firstScheduledDate = scheduler.schedule(scheduleName, ref, msg)
-    scheduler.schedule(scheduleName2, ref, msg2)
+    //TODO: dla każdego schedula zrobić schedule(), i zebrać te daty
+    // do tego funkcja schedule()
+
+    val firstScheduledDate = scheduler.schedule(MonWedScheduleName, ref, msg)
     val firstScheduledLocalDT = dateToLocalDT(firstScheduledDate)
 
     val currentDT = LocalDateTime.now()
     val formattedTimeLeft = prettyTimeLeft(currentDT, firstScheduledLocalDT)
-    println(s"$formattedTimeLeft left to send pizza's menu")
+    val host = RCEnvironment.HOST
+    println(s"$formattedTimeLeft left to send today's menu to host: $host")
   }
 }
