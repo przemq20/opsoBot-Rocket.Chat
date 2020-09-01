@@ -1,10 +1,10 @@
 package opsobot
 
-//import opsobot.bot.Bot
-//
-//object Main {
-//  def main(args: Array[String]): Unit = {
-//    val bot = Bot
-//    bot.run()
-//  }
-//}
+import opsobot.streambot.StreamBot
+
+object Main {
+  def main(args: Array[String]): Unit = {
+    val streamBot = new StreamBot
+    streamBot.run()
+  }
+}
