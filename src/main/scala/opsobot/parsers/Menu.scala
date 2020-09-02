@@ -1,27 +1,27 @@
-package opsobot.bot
+package opsobot.parsers
 
 import scala.collection.mutable
 
 class Menu() {
-  val sortingOrder: List[String] = List[String]("Śniadania", "Zupy", "Danie mięsne lub rybne", "Dania z mięsem", "Dania z ryb", "Dania wegetariańskie",
-    "Dania wegańskie", "Dodatki", "Sałatka lub surówka", "Desery", "Napoje")
+  private val sortingOrder: List[String] = List[String]("Śniadania", "Zupy", "Danie mięsne lub rybne", "Dania z mięsem", "Dania z ryb", "Dania wegetariańskie",
+    "Dania wegańskie", "Pizza", "Dodatki", "Sałatka lub surówka", "Desery", "Napoje")
 
-  val data: mutable.Map[String, List[String]] = mutable.Map[String, List[String]]()
+  private val data: mutable.Map[String, List[String]] = mutable.Map[String, List[String]]()
 
-  def addCategory(category: String): mutable.Map[String, List[String]] = {
+  def addCategory(category: String): Menu = {
     addCategory(category, List.empty)
-    data
+    this
   }
 
-  def addCategory(category: String, dishes: List[String]): mutable.Map[String, List[String]] = {
+  def addCategory(category: String, dishes: List[String]): Menu = {
     data.update(category, dishes)
-    data
+    this
   }
 
-  def addToCategory(category: String, dishes: List[String]): mutable.Map[String, List[String]] = {
+  def addToCategory(category: String, dishes: List[String]): Menu = {
     val existingDishes = data.getOrElseUpdate(category, dishes)
     if (existingDishes.isEmpty) data.update(category, dishes)
-    data
+    this
   }
 
   def categories(): Iterable[String] = data.keys
@@ -36,7 +36,8 @@ class Menu() {
       "Menu na dzisiaj jest niedostępne"
     }
     else {
-      data.foreach(category => {
+      val sorted = this.sort()
+      sorted.foreach(category => {
         val categoryName = category._1
         val dishesList = category._2
         builder.addAll(categoryName)
