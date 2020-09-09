@@ -134,3 +134,4 @@ rocketchat/
 
 # Production Credentials
 src/main/resources/prod.conf
+src/main/resources/prezentacja.conf
