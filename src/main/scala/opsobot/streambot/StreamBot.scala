@@ -7,6 +7,7 @@ import akka.actor.{ActorRef, ActorSystem}
 import akka.stream.scaladsl.{Flow, Sink, Source}
 import akka.stream.{ActorMaterializer, OverflowStrategy}
 import com.typesafe.akka.extension.quartz.QuartzSchedulerExtension
+import com.typesafe.config.{Config, ConfigFactory}
 import opsobot.parsers.{Menu, OlimpParser, OpsoParser}
 import opsobot.utils.DateTimeUtils.printTimeLeft
 import opsobot.utils.{DateTimeUtils, Locale}
@@ -24,7 +25,7 @@ class StreamBot {
     else s"Witaj w $localizedDay! Dzisiaj możesz zamówić PIZZUNIĘ w OPSO. Ponadto, menu na dzisiaj to:"
   }
 
-  private def makeMessageContent(restaurant: String, menu: Menu): String = {
+  private def createMessage(restaurant: String, menu: Menu): String = {
     val sb = new StringBuilder()
     sb.addAll(restaurant.toUpperCase)
     sb.addAll(" Menu:\n")
@@ -67,7 +68,7 @@ class StreamBot {
     }
 
   private val sendMenuFlow: Flow[MenuMessage, Unit, NotUsed] = Flow[MenuMessage].map { msg  =>
-    val rocketMessage = makeMessageContent(msg.restaurant, msg.content)
+    val rocketMessage = createMessage(msg.restaurant, msg.content)
     sendToTheRocket(rocketMessage)
     logger.info(s"Sent menu at: ${LocalDateTime.now()}")
   }
@@ -78,14 +79,14 @@ class StreamBot {
     implicit val materializer: ActorMaterializer = ActorMaterializer()
     implicit val ec: ExecutionContextExecutor = system.dispatcher
 
-    val streamBotFlows =
+    val streamBotFlow =
       Flow[Tick]
         .via(sendGreetings)
         .via(scrapeMenusFlow)
         .via(sendMenuFlow)
 
     val source = Source.actorRef(10, OverflowStrategy.dropHead)
-    val ref: ActorRef = streamBotFlows.to(Sink.ignore).runWith(source)
+    val ref: ActorRef = streamBotFlow.to(Sink.ignore).runWith(source)
 
     val schedules = List("MondaysAndWednesdays", "PizzaDays")
     val firstScheduled = schedule(schedules, ref, Tick)
