@@ -4,10 +4,18 @@ import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.jsoup.select.Elements
 
+import javax.net.ssl.{HostnameVerifier, SSLSession}
+
 object OlimpParser {
   final val MENU_URL = "https://www.olimprest.pl/restauracje/olimp-krakow-avia-software-park"
 
   def parse(): Menu = {
+    javax.net.ssl.HttpsURLConnection.setDefaultHostnameVerifier(
+      new HostnameVerifier {
+        override def verify(hostname: String, session: SSLSession): Boolean = hostname.equals("www.olimprest.pl"); // or return true
+      }
+    )
+
     val document: Document = Jsoup.connect(MENU_URL).get()
     val menu = new Menu()
 

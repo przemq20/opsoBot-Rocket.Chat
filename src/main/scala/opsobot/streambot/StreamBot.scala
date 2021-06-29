@@ -1,19 +1,17 @@
 package opsobot.streambot
 
-import java.time.{DayOfWeek, LocalDate, LocalDateTime}
-
 import akka.NotUsed
 import akka.actor.{ActorRef, ActorSystem}
 import akka.stream.scaladsl.{Flow, Sink, Source}
 import akka.stream.{ActorMaterializer, OverflowStrategy}
 import com.typesafe.akka.extension.quartz.QuartzSchedulerExtension
-import com.typesafe.config.{Config, ConfigFactory}
 import opsobot.parsers.{Menu, OlimpParser, OpsoParser}
 import opsobot.utils.DateTimeUtils.printTimeLeft
-import opsobot.utils.{DateTimeUtils, Locale}
 import opsobot.utils.RCUtils.sendToTheRocket
+import opsobot.utils.{DateTimeUtils, Locale}
 import org.slf4j.{Logger, LoggerFactory}
 
+import java.time.{DayOfWeek, LocalDate, LocalDateTime}
 import scala.concurrent.ExecutionContextExecutor
 
 class StreamBot {
@@ -67,7 +65,7 @@ class StreamBot {
         Nil
     }
 
-  private val sendMenuFlow: Flow[MenuMessage, Unit, NotUsed] = Flow[MenuMessage].map { msg  =>
+  private val sendMenuFlow: Flow[MenuMessage, Unit, NotUsed] = Flow[MenuMessage].map { msg =>
     val rocketMessage = createMessage(msg.restaurant, msg.content)
     sendToTheRocket(rocketMessage)
     logger.info(s"Sent menu at: ${LocalDateTime.now()}")
