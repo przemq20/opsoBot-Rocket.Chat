@@ -4,7 +4,7 @@ version := "0.1"
 
 scalaVersion := "2.13.3"
 
-lazy val root = (project in file(".")).enablePlugins(PlayScala)
+enablePlugins(JavaAppPackaging)
 
 resolvers += "scalac repo" at "https://raw.githubusercontent.com/ScalaConsultants/mvn-repo/master/"
 
