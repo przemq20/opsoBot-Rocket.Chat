@@ -16,4 +16,3 @@ libraryDependencies ++= Seq("org.jsoup" % "jsoup" % "1.13.1",
   "org.scalaj" %% "scalaj-http" % "2.4.2",
   "com.enragedginger" %% "akka-quartz-scheduler" % "1.8.4-akka-2.6.x"
 )
-libraryDependencies += guice
