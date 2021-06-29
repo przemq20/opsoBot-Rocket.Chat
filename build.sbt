@@ -4,6 +4,8 @@ version := "0.1"
 
 scalaVersion := "2.13.3"
 
+lazy val root = (project in file(".")).enablePlugins(PlayScala)
+
 resolvers += "scalac repo" at "https://raw.githubusercontent.com/ScalaConsultants/mvn-repo/master/"
 
 libraryDependencies ++= Seq("org.jsoup" % "jsoup" % "1.13.1",
