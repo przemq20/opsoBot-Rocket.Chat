@@ -86,7 +86,7 @@ class StreamBot {
     val source = Source.actorRef(10, OverflowStrategy.dropHead)
     val ref: ActorRef = streamBotFlow.to(Sink.ignore).runWith(source)
 
-    val schedules = List("MondaysAndWednesdays", "PizzaDays")
+    val schedules = List("MondaysAndWednesdays")
     val firstScheduled = schedule(schedules, ref, Tick)
     printTimeLeft(firstScheduled)
   }
