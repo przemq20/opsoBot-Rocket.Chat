@@ -23,8 +23,8 @@ object DateTimeUtils {
     val diff = Duration.between(start, end)
     String.format("%dh %02dm %02ds",
       diff.toHours,
-      diff.toMinutesPart,
-      diff.toSecondsPart)
+      diff.toMinutes % 60,
+      diff.toSeconds % 60)
   }
 
   def printTimeLeft(firstScheduleDT: LocalDateTime): Unit = {
