@@ -1,5 +1,7 @@
 package opsobot.utils
 
+import org.joda.time.format.PeriodFormatterBuilder
+
 import java.time.{Duration, LocalDateTime, ZoneId}
 import java.util.Date
 
@@ -24,7 +26,7 @@ object DateTimeUtils {
     String.format("%dh %02dm %02ds",
       diff.toHours,
       diff.toMinutes % 60,
-      diff.toSeconds % 60)
+      diff.getSeconds % 60)
   }
 
   def printTimeLeft(firstScheduleDT: LocalDateTime): Unit = {
