@@ -5,6 +5,7 @@ import akka.actor.typed.scaladsl.Behaviors
 import akka.http.scaladsl.Http
 import akka.http.scaladsl.model._
 import akka.http.scaladsl.server.Directives._
+
 import scala.io.StdIn
 
 
@@ -22,8 +23,9 @@ class Router {
         }
       }
 
-    val bindingFuture = Http().newServerAt(System.getenv("SERVER_URL"), System.getenv("PORT").toInt).bind(route)
-
+    val bindingFuture = Http().newServerAt(System.getenv("0.0.0.0"), 5000).bind(route)
+    println(System.getenv("SERVER_URL"))
+    println(System.getenv("PORT"))
     println(s"Server online at http://localhost:8080/\nPress RETURN to stop...")
     StdIn.readLine() // let it run until user presses return
     bindingFuture
