@@ -6,6 +6,9 @@ scalaVersion := "2.13.3"
 
 enablePlugins(JavaAppPackaging)
 
+mainClass in Compile := Some("opsobot.Main")
+
+
 resolvers += "scalac repo" at "https://raw.githubusercontent.com/ScalaConsultants/mvn-repo/master/"
 val AkkaVersion = "2.6.8"
 val AkkaHttpVersion = "10.2.4"
@@ -19,5 +22,4 @@ libraryDependencies ++= Seq("org.jsoup" % "jsoup" % "1.13.1",
   "com.typesafe.akka" %% "akka-actor-typed" % AkkaVersion,
   "com.typesafe.akka" %% "akka-stream" % AkkaVersion,
   "com.typesafe.akka" %% "akka-http" % AkkaHttpVersion
-
 )
