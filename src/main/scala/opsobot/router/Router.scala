@@ -22,8 +22,11 @@ class Router {
           complete(HttpEntity(ContentTypes.`text/html(UTF-8)`, "<h1>Say hello to akka-http</h1>"))
         }
       }
+    val host = "0.0.0.0"
+    val port: Int = sys.env.getOrElse("PORT", "8080").toInt
 
-    val bindingFuture = Http().newServerAt(System.getenv("0.0.0.0"), 5000).bind(route)
+
+    val bindingFuture = Http().newServerAt(host, port).bind(route)
     println(System.getenv("SERVER_URL"))
     println(System.getenv("PORT"))
     println(s"Server online at http://localhost:8080/\nPress RETURN to stop...")
