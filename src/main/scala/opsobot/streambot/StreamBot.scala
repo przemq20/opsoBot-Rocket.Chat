@@ -50,11 +50,11 @@ class StreamBot {
 
   private val sendGreetings: Flow[Tick, Tick, NotUsed] = Flow[Tick].map { tick =>
     val dayOfWeek = LocalDate.now.getDayOfWeek
-    if (dayOfWeek == DayOfWeek.MONDAY || dayOfWeek == DayOfWeek.WEDNESDAY) {
+//    if (dayOfWeek == DayOfWeek.MONDAY || dayOfWeek == DayOfWeek.WEDNESDAY) {
       sendToTheRocket(getGreetingsForToday(dayOfWeek, isPizzaday = true))
-    } else {
-      sendToTheRocket(getGreetingsForToday(dayOfWeek, isPizzaday = false))
-    }
+//    } else {
+//      sendToTheRocket(getGreetingsForToday(dayOfWeek, isPizzaday = false))
+//    }
     tick
   }
 
