@@ -1,24 +1,24 @@
 package opsobot.utils
 
-import org.slf4j.{Logger, LoggerFactory}
 import scalaj.http.{Http, HttpOptions}
 
 object RCUtils {
-  val logger: Logger = LoggerFactory.getLogger(this.getClass)
 
   def sendToTheRocket(message: String): Unit = {
     val data = makeMessageString(message)
-    val req = Http(RCEnvironment.SEND_MESSAGE).postData(data)
+    try Http(RCEnvironment.SEND_MESSAGE).postData(data)
       .header("X-Auth-Token", Credentials.TOKEN)
       .header("X-User-Id", Credentials.USER_ID)
       .header("Content-type", "application/json")
       .header("Charset", "UTF-8")
       .option(HttpOptions.readTimeout(10000)).asString
-    logger.info(req.body)
+    catch {
+      case e: Throwable => scribe.error(s"Error: ${e.getLocalizedMessage}")
+    }
   }
 
   def makeMessageString(content: String): String = {
-    val newlineChar = "\\n"
+    val newlineChar    = "\\n"
     val whitespaceChar = "\u2001"
     val rawContent = content
       .replace("\n", newlineChar)

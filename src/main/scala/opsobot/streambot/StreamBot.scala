@@ -1,21 +1,19 @@
 package opsobot.streambot
 
 import akka.NotUsed
-import akka.actor.{ActorRef, ActorSystem}
-import akka.stream.scaladsl.{Flow, Sink, Source}
-import akka.stream.{ActorMaterializer, OverflowStrategy}
+import akka.actor.{ ActorRef, ActorSystem }
+import akka.stream.scaladsl.{ Flow, Sink, Source }
+import akka.stream.{ Materializer, OverflowStrategy }
 import com.typesafe.akka.extension.quartz.QuartzSchedulerExtension
-import opsobot.parsers.{Menu, OlimpParser, OpsoParser}
+import opsobot.parsers.{ Menu, OlimpParser, OpsoParser }
 import opsobot.utils.DateTimeUtils.printTimeLeft
 import opsobot.utils.RCUtils.sendToTheRocket
-import opsobot.utils.{DateTimeUtils, Locale}
-import org.slf4j.{Logger, LoggerFactory}
+import opsobot.utils.{ DateTimeUtils, Locale }
 
-import java.time.{DayOfWeek, LocalDate, LocalDateTime}
+import java.time.{ DayOfWeek, LocalDate, LocalDateTime }
 import scala.concurrent.ExecutionContextExecutor
 
 class StreamBot {
-  val logger: Logger = LoggerFactory.getLogger(this.getClass)
 
   private def getGreetingsForToday(dayOfWeek: DayOfWeek, isPizzaday: Boolean): String = {
     val localizedDay = Locale.dayOfWeek(dayOfWeek)
@@ -37,7 +35,7 @@ class StreamBot {
   }
 
   private def schedule(schedules: Seq[String], ref: ActorRef, msg: AnyRef)(implicit system: ActorSystem): LocalDateTime = {
-    val scheduler = QuartzSchedulerExtension(system)
+    val scheduler   = QuartzSchedulerExtension(system)
     var closestDate = LocalDateTime.MAX
     schedules.foreach(schedule => {
       val date = scheduler.schedule(schedule, ref, msg)
@@ -50,11 +48,9 @@ class StreamBot {
 
   private val sendGreetings: Flow[Tick, Tick, NotUsed] = Flow[Tick].map { tick =>
     val dayOfWeek = LocalDate.now.getDayOfWeek
-//    if (dayOfWeek == DayOfWeek.MONDAY || dayOfWeek == DayOfWeek.WEDNESDAY) {
-      sendToTheRocket(getGreetingsForToday(dayOfWeek, isPizzaday = true))
-//    } else {
-//      sendToTheRocket(getGreetingsForToday(dayOfWeek, isPizzaday = false))
-//    }
+    scribe.info("Sending greetings")
+    sendToTheRocket(getGreetingsForToday(dayOfWeek, isPizzaday = true))
+    scribe.info(s"Greetings sent successfully at ${LocalDateTime.now()}")
     tick
   }
 
@@ -66,16 +62,17 @@ class StreamBot {
     }
 
   private val sendMenuFlow: Flow[MenuMessage, Unit, NotUsed] = Flow[MenuMessage].map { msg =>
+    scribe.info(s"Creating menu message for ${msg.restaurant}")
     val rocketMessage = createMessage(msg.restaurant, msg.content)
+    scribe.info(s"Message created. Trying to send menu for ${msg.restaurant}")
     sendToTheRocket(rocketMessage)
-    logger.info(s"Sent menu at: ${LocalDateTime.now()}")
+    scribe.info(s"Sent successfully menu at: ${LocalDateTime.now()} for ${msg.restaurant}")
   }
 
-
   def run(): Unit = {
-    implicit val system: ActorSystem = ActorSystem("reader")
-    implicit val materializer: ActorMaterializer = ActorMaterializer()
-    implicit val ec: ExecutionContextExecutor = system.dispatcher
+    implicit val system:       ActorSystem              = ActorSystem("reader")
+    implicit val materializer: Materializer.type        = Materializer
+    implicit val ec:           ExecutionContextExecutor = system.dispatcher
 
     val streamBotFlow =
       Flow[Tick]
@@ -86,7 +83,7 @@ class StreamBot {
     val source = Source.actorRef(10, OverflowStrategy.dropHead)
     val ref: ActorRef = streamBotFlow.to(Sink.ignore).runWith(source)
 
-    val schedules = List("MondaysAndWednesdays")
+    val schedules      = List("MondaysAndWednesdays")
     val firstScheduled = schedule(schedules, ref, Tick)
     printTimeLeft(firstScheduled)
   }

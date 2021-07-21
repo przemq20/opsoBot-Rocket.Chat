@@ -11,16 +11,19 @@ object PizzaParser {
 
   def parse(): Menu = {
     val document = Jsoup.connect(MENU_URL).get()
-    val menu = new Menu()
+    val menu     = new Menu()
     val menuSection: Elements = document.select(".pizza")
     val headers = menuSection.select("h4")
 
     val dishType = "PIZZUNIA"
-    val dishes = headers.first().nextElementSibling()
+    val dishes = headers
+      .first()
+      .nextElementSibling()
       .select("p")
       .select(":not(.priceelement)")
       .eachText()
-      .asScala.toList
+      .asScala
+      .toList
       .map(x => x.toLowerCase()) // A w sumie to nie wiem czy to jest potrzebne
 
     menu.addCategory(dishType, dishes)

@@ -9,7 +9,7 @@ object Greetings {
 
   def randomGreeting: String = {
     val rand = new Random()
-    val n = greetings.length
+    val n    = greetings.length
     greetings(abs(rand.nextInt() % n))
   }
 

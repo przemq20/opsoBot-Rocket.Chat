@@ -10,12 +10,12 @@ object OpsoParser {
 
   def parse(): Menu = {
     val document = Jsoup.connect(MENU_URL).get()
-    val menu = new Menu()
+    val menu     = new Menu()
 
     val menuSection: Elements = document.select(".zestawy-obiadowe")
     val headers = menuSection.select("h4")
 
-    val opsoDateText = headers.first.text
+    val opsoDateText  = headers.first.text
     val opsoDateRegex = ".*(\\d{2})\\.(\\d{2})\\.(\\d{4})".r
     val opsoDate = opsoDateText match {
       case opsoDateRegex(day, month, year) =>
@@ -24,6 +24,7 @@ object OpsoParser {
     }
     val currentDate = java.time.LocalDate.now
     if (opsoDate != currentDate) {
+      scribe.error("Opso menu is not up to date")
       //throw NoUpdatedMenuException("Opso menu is not up to date")
       return menu
     }
@@ -38,7 +39,8 @@ object OpsoParser {
         .select("p")
         .select(":not(.priceelement)")
         .eachText()
-        .asScala.toList
+        .asScala
+        .toList
 
       menu.addCategory(dishType, dishes)
     })
