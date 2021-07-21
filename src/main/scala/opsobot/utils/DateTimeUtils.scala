@@ -29,7 +29,7 @@ object DateTimeUtils {
     val currentDT = LocalDateTime.now()
     val timeLeft  = formattedTimeLeft(currentDT, firstScheduleDT)
     val host      = RCEnvironment.HOST
-    val room      = RCEnvironment.ROOM_ID
+    val room      = RCEnvironment.ROOM_NAME
     println(s"""$timeLeft left to send menu to host $host
                |Menu will be sent at ${formattedDateTime(firstScheduleDT)} to room $room
                |""".stripMargin)
