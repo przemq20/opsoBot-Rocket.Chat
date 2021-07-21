@@ -8,19 +8,18 @@ import scala.io.{BufferedSource, Source}
 object RandomJoke {
 
   def getRandomJoke: (JsValue, JsValue) = {
-    val html: BufferedSource = Source.fromURL("https://official-joke-api.appspot.com/jokes/random")
-    val joke: String = html.mkString
-    val spray: JsValue = joke.map(_.toChar).mkString.parseJson
-    val v1: JsValue = spray.asJsObject().getFields("setup").head
-    val v2: JsValue = spray.asJsObject().getFields("punchline").head
+    val html:  BufferedSource = Source.fromURL("https://official-joke-api.appspot.com/jokes/random")
+    val joke:  String         = html.mkString
+    val spray: JsValue        = joke.map(_.toChar).mkString.parseJson
+    val v1:    JsValue        = spray.asJsObject().getFields("setup").head
+    val v2:    JsValue        = spray.asJsObject().getFields("punchline").head
 
     (v1, v2)
   }
 
-
   def randomJoke(): String = {
     val (v1, v2) = getRandomJoke
-    val builder = new StringBuilder
+    val builder  = new StringBuilder
     builder.addAll(v1.toString())
     builder.addAll("\n.\n.\n.\n")
     builder.addAll(v2.toString())

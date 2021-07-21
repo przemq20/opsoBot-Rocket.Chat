@@ -3,8 +3,20 @@ package opsobot.parsers
 import scala.collection.mutable
 
 class Menu() {
-  private val sortingOrder: List[String] = List[String]("Śniadania", "Zupy", "Danie mięsne lub rybne", "Dania z mięsem", "Dania z ryb", "Dania wegetariańskie",
-    "Dania wegańskie", "Pizza", "Dodatki", "Sałatka lub surówka", "Desery", "Napoje")
+  private val sortingOrder: List[String] = List[String](
+    "Śniadania",
+    "Zupy",
+    "Danie mięsne lub rybne",
+    "Dania z mięsem",
+    "Dania z ryb",
+    "Dania wegetariańskie",
+    "Dania wegańskie",
+    "Pizza",
+    "Dodatki",
+    "Sałatka lub surówka",
+    "Desery",
+    "Napoje"
+  )
 
   private val data: mutable.Map[String, List[String]] = mutable.Map[String, List[String]]()
 
@@ -34,12 +46,11 @@ class Menu() {
     val builder = new StringBuilder()
     if (data.isEmpty) {
       "Menu na dzisiaj jest niedostępne"
-    }
-    else {
+    } else {
       val sorted = this.sort()
       sorted.foreach(category => {
         val categoryName = category._1
-        val dishesList = category._2
+        val dishesList   = category._2
         builder.addAll(categoryName)
         builder.addAll(":")
         dishesList.foreach(dish => {

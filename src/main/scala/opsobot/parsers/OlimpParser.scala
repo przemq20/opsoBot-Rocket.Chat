@@ -4,7 +4,7 @@ import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.jsoup.select.Elements
 
-import javax.net.ssl.{HostnameVerifier, SSLSession}
+import javax.net.ssl.{ HostnameVerifier, SSLSession }
 
 object OlimpParser {
   final val MENU_URL = "https://www.olimprest.pl/restauracje/olimp-krakow-avia-software-park"
@@ -12,7 +12,8 @@ object OlimpParser {
   def parse(): Menu = {
     javax.net.ssl.HttpsURLConnection.setDefaultHostnameVerifier(
       new HostnameVerifier {
-        override def verify(hostname: String, session: SSLSession): Boolean = hostname.equals("www.olimprest.pl"); // or return true
+        override def verify(hostname: String, session: SSLSession): Boolean =
+          hostname.equals("www.olimprest.pl"); // or return true
       }
     )
 
@@ -22,6 +23,7 @@ object OlimpParser {
     val dishTypeBlocks: Elements = document.select(".menu-category-block")
     if (dishTypeBlocks.isEmpty) {
       //      throw NoUpdatedMenuException("Olimp menu is unavailable")
+      scribe.error("Olimp menu is unavailable")
       return menu
     }
     dishTypeBlocks.forEach(block => {
@@ -30,7 +32,7 @@ object OlimpParser {
       val spanTagRegex = "(.*)<span>(.*)</span>".r
       val parsedDishType = dishType match {
         case spanTagRegex(a, b) => a + b
-        case _ => dishType
+        case _                  => dishType
       }
 
       menu.addCategory(parsedDishType)
