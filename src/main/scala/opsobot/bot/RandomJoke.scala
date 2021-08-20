@@ -3,7 +3,7 @@ package opsobot.bot
 import slack.rtm.SlackRtmClient
 import spray.json._
 
-import scala.io.{BufferedSource, Source}
+import scala.io.{ BufferedSource, Source }
 
 object RandomJoke {
 
