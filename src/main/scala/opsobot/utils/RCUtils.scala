@@ -24,6 +24,6 @@ object RCUtils {
       .replace("\n", newlineChar)
       .replace("\t", whitespaceChar * 3)
 
-    s"""{"message": {"rid": "${RCEnvironment.ROOM_ID}", "avatar": "${Credentials.AVATAR}", "msg": "$rawContent ", "alias": "OpsoBot"}}"""
+    s"""{"message": {"rid": "${RCEnvironment.ROOM_ID}", "msg": "$rawContent "}}"""
   }
 }
