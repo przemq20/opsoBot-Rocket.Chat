@@ -1,16 +1,16 @@
 package opsobot.streambot
 
 import akka.NotUsed
-import akka.actor.{ ActorRef, ActorSystem }
-import akka.stream.scaladsl.{ Flow, Sink, Source }
-import akka.stream.{ Materializer, OverflowStrategy }
+import akka.actor.{ActorRef, ActorSystem}
+import akka.stream.scaladsl.{Flow, Sink, Source}
+import akka.stream.{Materializer, OverflowStrategy}
 import com.typesafe.akka.extension.quartz.QuartzSchedulerExtension
-import opsobot.parsers.{ Menu, OlimpParser, OpsoParser }
+import opsobot.parsers.{FoodTrucksParser, MakarunParser, Menu, OlimpParser, OpsoParser}
 import opsobot.utils.DateTimeUtils.printTimeLeft
 import opsobot.utils.RCUtils.sendToTheRocket
-import opsobot.utils.{ DateTimeUtils, Locale }
+import opsobot.utils.{DateTimeUtils, Locale}
 
-import java.time.{ DayOfWeek, LocalDate, LocalDateTime }
+import java.time.{DayOfWeek, LocalDate, LocalDateTime}
 import scala.concurrent.ExecutionContextExecutor
 
 class StreamBot {
@@ -58,6 +58,8 @@ class StreamBot {
     Flow[Tick].mapConcat { _ =>
       new MenuMessage("OPSO", OpsoParser.parse()) ::
         new MenuMessage("Olimp", OlimpParser.parse()) ::
+        new MenuMessage("Makarun", MakarunParser.parse) ::
+        new MenuMessage("Food Trucki", FoodTrucksParser.parse) ::
         Nil
     }
 

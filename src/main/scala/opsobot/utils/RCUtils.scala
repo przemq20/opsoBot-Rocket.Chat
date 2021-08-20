@@ -1,17 +1,19 @@
 package opsobot.utils
 
-import scalaj.http.{Http, HttpOptions}
+import scalaj.http.{ Http, HttpOptions }
 
 object RCUtils {
 
   def sendToTheRocket(message: String): Unit = {
     val data = makeMessageString(message)
-    try Http(RCEnvironment.SEND_MESSAGE).postData(data)
+    try Http(RCEnvironment.SEND_MESSAGE)
+      .postData(data)
       .header("X-Auth-Token", Credentials.TOKEN)
       .header("X-User-Id", Credentials.USER_ID)
       .header("Content-type", "application/json")
       .header("Charset", "UTF-8")
-      .option(HttpOptions.readTimeout(10000)).asString
+      .option(HttpOptions.readTimeout(10000))
+      .asString
     catch {
       case e: Throwable => scribe.error(s"Error: ${e.getLocalizedMessage}")
     }
