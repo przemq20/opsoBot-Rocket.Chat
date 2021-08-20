@@ -19,7 +19,7 @@ object RCEnvironment {
   final val ROOMS_INFO   = s"$CORE_URL/rooms.info?roomId=$ROOM_ID"
 
   lazy val ROOM_NAME: String = {
-    val request = Http("https://chat.czk.comarch.com/api/v1/groups.info?roomId=CESJrJsPqoDEB67mC")
+    val request = Http(s"https://chat.czk.comarch.com/api/v1/groups.info?roomId=$ROOM_ID")
       .header("X-Auth-Token", Credentials.TOKEN)
       .header("X-User-Id", Credentials.USER_ID)
       .header("Content-type", "application/json")
