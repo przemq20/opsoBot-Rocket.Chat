@@ -1,24 +1,27 @@
 package opsobot.streambot
 
 import akka.NotUsed
-import akka.actor.{ActorRef, ActorSystem}
-import akka.stream.scaladsl.{Flow, Sink, Source}
-import akka.stream.{Materializer, OverflowStrategy}
+import akka.actor.{ ActorRef, ActorSystem }
+import akka.stream.scaladsl.{ Flow, Sink, Source }
+import akka.stream.{ Materializer, OverflowStrategy }
 import com.typesafe.akka.extension.quartz.QuartzSchedulerExtension
-import opsobot.parsers.{FoodTrucksParser, MakarunParser, Menu, OlimpParser, OpsoParser}
+import opsobot.parsers._
 import opsobot.utils.DateTimeUtils.printTimeLeft
 import opsobot.utils.RCUtils.sendToTheRocket
-import opsobot.utils.{DateTimeUtils, Locale}
+import opsobot.utils.{ DateTimeUtils, Locale }
 
-import java.time.{DayOfWeek, LocalDate, LocalDateTime}
+import java.time.{ DayOfWeek, LocalDate, LocalDateTime }
 import scala.concurrent.ExecutionContextExecutor
 
 class StreamBot {
 
   private def getGreetingsForToday(dayOfWeek: DayOfWeek, isPizzaday: Boolean): String = {
     val localizedDay = Locale.dayOfWeek(dayOfWeek)
-    if (isPizzaday) s"Witaj w $localizedDay! Menu na dzisiaj to:"
-    else s"Witaj w $localizedDay! Dzisiaj możesz zamówić PIZZUNIĘ w OPSO. Ponadto, menu na dzisiaj to:"
+    if (isPizzaday) {
+      s"Witaj w $localizedDay! Menu na dzisiaj to:"
+    } else {
+      s"Witaj w $localizedDay! Dzisiaj możesz zamówić PIZZUNIĘ w OPSO. Ponadto, menu na dzisiaj to:"
+    }
   }
 
   private def createMessage(restaurant: String, menu: Menu): String = {
@@ -28,7 +31,7 @@ class StreamBot {
     sb.addAll("----" * restaurant.length)
     sb.addAll("\n")
     sb.addAll(menu.toString)
-    sb.addAll("\n")
+//    sb.addAll("\n")
     sb.addAll("-" * 40)
     sb.addAll("\n")
     sb.result()
@@ -66,6 +69,7 @@ class StreamBot {
   private val sendMenuFlow: Flow[MenuMessage, Unit, NotUsed] = Flow[MenuMessage].map { msg =>
     scribe.info(s"Creating menu message for ${msg.restaurant}")
     val rocketMessage = createMessage(msg.restaurant, msg.content)
+//      .replaceAll("(?m)^[ \t]*\r?\n", "")
     scribe.info(s"Message created. Trying to send menu for ${msg.restaurant}")
     sendToTheRocket(rocketMessage)
     scribe.info(s"Sent successfully menu at: ${LocalDateTime.now()} for ${msg.restaurant}")
