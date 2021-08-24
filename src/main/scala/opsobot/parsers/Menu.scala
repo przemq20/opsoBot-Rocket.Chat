@@ -45,7 +45,7 @@ class Menu() {
   override def toString: String = {
     val builder = new StringBuilder()
     if (data.isEmpty) {
-      "Menu na dzisiaj jest niedostępne"
+      "Menu na dzisiaj jest niedostępne\n"
     } else {
       val sorted = this.sort()
       sorted.foreach(category => {
