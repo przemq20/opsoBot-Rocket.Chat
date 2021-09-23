@@ -10,16 +10,16 @@ object RCUtils {
                    |$data
                    |""".stripMargin)
     try {
-      val c = Http(RCEnvironment.SEND_MESSAGE)
+      val request = Http(RCEnvironment.SEND_MESSAGE)
         .postData(data)
         .header("X-Auth-Token", Credentials.TOKEN)
         .header("X-User-Id", Credentials.USER_ID)
         .header("Content-type", "application/json")
         .header("Charset", "UTF-8")
-        .option(HttpOptions.readTimeout(10000))
-        .asString
 
-      scribe.info(s"$c")
+      scribe.info(s"$request")
+      val response = request.option(HttpOptions.readTimeout(10000)).asString
+      scribe.info(s"$response")
     } catch {
       case e: Throwable => scribe.error(s"Error: ${e.getLocalizedMessage}")
     }

@@ -6,24 +6,19 @@ import org.jsoup.select.Elements
 
 import javax.net.ssl.{ HostnameVerifier, SSLSession }
 
-object OlimpParser extends Parser {
-  final val MENU_URL = "https://www.olimprest.pl/restauracje/olimp-krakow-avia-software-park"
+object HindusParser extends App with Parser {
+  final val MENU_URL = "https://www.facebook.com/HindusFood-Krak%C3%B3w-MENU-110617490850262"
 
   def parse(): Menu = {
     javax.net.ssl.HttpsURLConnection.setDefaultHostnameVerifier(
       new HostnameVerifier {
         override def verify(hostname: String, session: SSLSession): Boolean =
-          hostname.equals("www.olimprest.pl"); // or return true
+          hostname.equals("www.facebook.com"); // or return true
       }
     )
 
-    val document: Document = {
-      Jsoup
-        .connect(MENU_URL)
-        .timeout(100000)
-        .ignoreHttpErrors(true)
-        .get()
-    }
+    val document: Document = Jsoup.connect(MENU_URL).get()
+    println(document.select("rq0escxv l9j0dhe7 du4w35lb qmfd67dx hpfvmrgz gile2uim buofh1pr g5gj957u aov4n071 oi9244e8 bi6gxh9e h676nmdw aghb5jc5"))
     val menu = new Menu()
 
     val dishTypeBlocks: Elements = document.select(".menu-category-block")
@@ -54,4 +49,5 @@ object OlimpParser extends Parser {
     })
     menu
   }
+  println(parse())
 }
