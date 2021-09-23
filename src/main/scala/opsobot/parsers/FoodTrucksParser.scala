@@ -2,8 +2,8 @@ package opsobot.parsers
 
 import java.util.{ Calendar, TimeZone }
 
-object FoodTrucksParser {
-  def parse: Menu = {
+object FoodTrucksParser extends Parser {
+  def parse(): Menu = {
     val category = "Dzisiejsze Food Trucki"
     val menu     = new Menu
     menu.addCategory(category)
