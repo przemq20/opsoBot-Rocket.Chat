@@ -9,8 +9,12 @@ object OpsoParser extends Parser {
   final val MENU_URL = "https://opso.pl/menu/"
 
   def parse(): Menu = {
-    val document = Jsoup.connect(MENU_URL).get()
-    val menu     = new Menu()
+    val document = Jsoup
+      .connect(MENU_URL)
+      .timeout(100000)
+      .ignoreHttpErrors(true)
+      .get()
+    val menu = new Menu()
 
     val menuSection: Elements = document.select(".zestawy-obiadowe")
     val headers = menuSection.select("h4")
