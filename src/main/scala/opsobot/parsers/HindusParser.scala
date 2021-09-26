@@ -30,5 +30,4 @@ object HindusParser extends Parser {
     menu.addCategory(category, list)
     menu
   }
-  println(parse())
 }
