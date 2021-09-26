@@ -10,7 +10,7 @@ object FoodTrucksParser extends Parser {
         case Calendar.MONDAY =>
           List(
             ("RAJSKIE TAJSKIE - Kuchnia tajska", List.empty),
-            ("GRILL MOBIL- Kuchnia turecko-grecka", List.empty)
+            ("GRILL MOBIL- Kuchnia turecko-grecka", List("http://grillmobil.pl/to-ci-dopiero-menu/"))
           )
         case Calendar.TUESDAY =>
           List(
@@ -18,17 +18,20 @@ object FoodTrucksParser extends Parser {
           )
         case Calendar.WEDNESDAY =>
           List(
-            ("MANUFAKTURA KRAKOWSKA - burgery i frytki", List.empty),
+            (
+              "MANUFAKTURA KRAKOWSKA - burgery i frytki",
+              List("https://www.facebook.com/manufakturakrakowska/photos/a.1579173878964213/2668016340079956/")
+            ),
             ("Pizza - kuchnia włoska", List.empty)
           )
         case Calendar.THURSDAY =>
           List(
-            ("ROZBRYKANA OWCA - dania inspirowane kuchnią marokańską", List.empty),
+            ("ROZBRYKANA OWCA - dania inspirowane kuchnią marokańską", List("https://rozbrykanaowca.pl/menu/")),
             ("PIEROGOWE LOVE - pierogi", List.empty)
           )
         case Calendar.FRIDAY =>
           List(
-            ("COMPADRE - kuchnia meksykańska", List.empty),
+            ("COMPADRE - kuchnia meksykańska", List("https://www.facebook.com/compadrefoodtruck/menu")),
             ("CHINA BAR - kuchnia wietnamska", List.empty)
           )
         case _ => List(("", List("")))
