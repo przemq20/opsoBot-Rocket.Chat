@@ -16,6 +16,7 @@ object MakarunParser extends Parser {
       case _                  => "Dzisiaj jest weekend"
     }
     menu.addToCategory(category, List(todayPromo))
+    menu.addCategory("Pełne menu", List("https://makarun.pl/punkt/avia-offices-zyczkowskiego-20/"))
     menu
   }
 }
