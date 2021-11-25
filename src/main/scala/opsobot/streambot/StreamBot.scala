@@ -17,10 +17,9 @@ class StreamBot {
 
   private def getGreetingsForToday(dayOfWeek: DayOfWeek, isPizzaday: Boolean): String = {
     val localizedDay = Locale.dayOfWeek(dayOfWeek)
-    if (isPizzaday) {
-      s"Witaj w $localizedDay! Menu na dzisiaj to:"
-    } else {
-      s"Witaj w $localizedDay! Dzisiaj możesz zamówić PIZZUNIĘ w OPSO. Ponadto, menu na dzisiaj to:"
+    dayOfWeek match {
+      case DayOfWeek.TUESDAY => s"Witaj we $localizedDay! Menu na dzisiaj to:"
+      case _                 => s"Witaj w $localizedDay! Menu na dzisiaj to:"
     }
   }
 
