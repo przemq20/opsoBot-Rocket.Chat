@@ -18,7 +18,7 @@ object OpsoParser extends Parser {
         .get()
       val menu = new Menu()
 
-      val menuSection: Elements = document.select(".zestawy-obiadowe")
+      val menuSection: Elements = document.select(".zestawy-obiadowe-")
       val headers     = menuSection.select("h4")
       val currentDate = java.time.LocalDate.now
 
