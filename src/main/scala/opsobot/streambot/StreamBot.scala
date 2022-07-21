@@ -58,10 +58,10 @@ class StreamBot {
 
   private val scrapeMenusFlow: Flow[Tick, MenuMessage, NotUsed] =
     Flow[Tick].mapConcat { _ =>
-      new MenuMessage("OPSO", OpsoParser.parse()) ::
+      new MenuMessage("OPSO", OpsoParserPDF.parse()) ::
         new MenuMessage("Olimp", OlimpParser.parse()) ::
-        new MenuMessage("Makarun", MakarunParser.parse) ::
-        new MenuMessage("Food Trucki", FoodTrucksParser.parse) ::
+        new MenuMessage("Makarun", MakarunParser.parse()) ::
+        new MenuMessage("Food Trucki", FoodTrucksParser.parse()) ::
         Nil
     }
 

@@ -3,20 +3,7 @@ package opsobot.parsers
 import scala.collection.mutable
 
 class Menu() {
-  private val sortingOrder: List[String] = List[String](
-    "Śniadania",
-    "Zupy",
-    "Danie mięsne lub rybne",
-    "Dania z mięsem",
-    "Dania z ryb",
-    "Dania wegetariańskie",
-    "Dania wegańskie",
-    "Pizza",
-    "Dodatki",
-    "Sałatka lub surówka",
-    "Desery",
-    "Napoje"
-  )
+  private val sortingOrder: List[String] = Category.allCategories
 
   private val data: mutable.Map[String, List[String]] = mutable.Map[String, List[String]]()
 
