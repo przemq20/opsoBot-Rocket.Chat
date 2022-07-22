@@ -23,5 +23,8 @@ libraryDependencies ++= Seq("org.jsoup" % "jsoup" % "1.13.1",
   "com.typesafe.akka" %% "akka-stream" % AkkaVersion,
   "com.typesafe.akka" %% "akka-http" % AkkaHttpVersion,
   "com.outr" %% "scribe" % "3.5.3",
-  "ch.qos.logback" % "logback-classic" % "1.1.3" % Runtime
+  "ch.qos.logback" % "logback-classic" % "1.1.3" % Runtime,
+  "org.apache.tika" % "tika-core" % "2.4.1",
+  "org.apache.tika" % "tika-parsers" % "2.4.1" pomOnly(),
+  "org.apache.tika" % "tika-parser-pdf-module" % "2.4.1"
 )
