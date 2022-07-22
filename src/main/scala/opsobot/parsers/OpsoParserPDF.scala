@@ -6,7 +6,8 @@ import org.apache.tika.parser.pdf.PDFParser
 import org.apache.tika.sax.BodyContentHandler
 import org.jsoup.Jsoup
 
-import java.io.{File, FileInputStream, FileOutputStream}
+import java.io.{ File, FileInputStream, FileOutputStream }
+import java.time.ZoneId
 
 object OpsoParserPDF extends Parser {
   val MENU_URL = "https://opso.pl/"
@@ -66,24 +67,31 @@ object OpsoParserPDF extends Parser {
       .filterNot(_.startsWith("("))
       .toList
 
-    val menuDate                = menuItems.head
-    val menuDishesAndCategories = menuItems.drop(1)
-    val allCategories           = Category.allCategories
-    val categories              = menuDishesAndCategories.filter(a => allCategories.map(_.toLowerCase()).contains(a.toLowerCase()))
-    val positionsOfCategories = categories.map(menuDishesAndCategories.indexOf(_)) ++ List(
-      menuDishesAndCategories.length
-    )
+    val currentDate  = java.time.LocalDate.now
+    val opsoDateText = menuItems.head.takeRight(10)
+    val format       = new java.text.SimpleDateFormat("dd.MM.yyyy")
+    val opsoDate     = format.parse(opsoDateText).toInstant.atZone(ZoneId.systemDefault()).toLocalDate
+    if (opsoDate != currentDate) {
+      new Menu
+    } else {
+      val menuDishesAndCategories = menuItems.drop(1)
+      val allCategories           = Category.allCategories
+      val categories              = menuDishesAndCategories.filter(a => allCategories.map(_.toLowerCase()).contains(a.toLowerCase()))
+      val positionsOfCategories = categories.map(menuDishesAndCategories.indexOf(_)) ++ List(
+        menuDishesAndCategories.length
+      )
 
-    val dishesList = for { category <- categories.indices } yield {
-      val position1 = positionsOfCategories(category)
-      val position2 = positionsOfCategories(category + 1)
+      val dishesList = for { category <- categories.indices } yield {
+        val position1 = positionsOfCategories(category)
+        val position2 = positionsOfCategories(category + 1)
 
-      menuDishesAndCategories.slice(position1, position2)
+        menuDishesAndCategories.slice(position1, position2)
+      }
+
+      val menu = new Menu
+      dishesList.foreach(dishes => menu.addCategory(dishes.head, dishes.drop(1)))
+
+      menu
     }
-
-    val menu = new Menu
-    dishesList.foreach(dishes => menu.addCategory(dishes.head, dishes.drop(1)))
-
-    menu
   }
 }

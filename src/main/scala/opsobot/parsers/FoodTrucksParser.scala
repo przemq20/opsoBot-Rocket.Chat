@@ -37,8 +37,7 @@ object FoodTrucksParser extends Parser {
         case _ => List(("", List("")))
       }
     todayFoodTrucks.foreach(food => {
-      menu.addCategory(food._1)
-      menu.addToCategory(food._1, food._2)
+      menu.addCategory(food._1, food._2)
     })
     menu
   }
