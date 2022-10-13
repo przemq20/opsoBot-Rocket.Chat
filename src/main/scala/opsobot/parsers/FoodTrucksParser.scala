@@ -9,8 +9,9 @@ object FoodTrucksParser extends Parser {
       Calendar.getInstance(TimeZone.getTimeZone("GMT+2")).get(Calendar.DAY_OF_WEEK) match {
         case Calendar.MONDAY =>
           List(
-            ("RAJSKIE TAJSKIE - Kuchnia tajska", List.empty),
-            ("GRILL MOBIL- Kuchnia turecko-grecka", List("http://grillmobil.pl/to-ci-dopiero-menu/"))
+//            ("RAJSKIE TAJSKIE - Kuchnia tajska", List.empty),
+//            ("GRILL MOBIL- Kuchnia turecko-grecka", List("http://grillmobil.pl/to-ci-dopiero-menu/")),
+            ("U Włocha - kuchnia włoska", List("https://www.facebook.com/people/U-Wlocha-Food-Truck/100057174591521/"))
           )
         case Calendar.TUESDAY =>
           List(
@@ -21,8 +22,7 @@ object FoodTrucksParser extends Parser {
             (
               "MANUFAKTURA KRAKOWSKA - burgery i frytki",
               List("https://www.facebook.com/manufakturakrakowska/photos/a.1579173878964213/2668016340079956/")
-            ),
-            ("Pizza - kuchnia włoska", List.empty)
+            )
           )
         case Calendar.THURSDAY =>
           List(
@@ -32,7 +32,7 @@ object FoodTrucksParser extends Parser {
         case Calendar.FRIDAY =>
           List(
             ("COMPADRE - kuchnia meksykańska", List("https://www.facebook.com/compadrefoodtruck/menu")),
-            ("CHINA BAR - kuchnia wietnamska", List.empty)
+//            ("CHINA BAR - kuchnia wietnamska", List.empty)
           )
         case _ => List(("", List("")))
       }
