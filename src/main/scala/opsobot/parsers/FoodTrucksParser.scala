@@ -21,7 +21,7 @@ object FoodTrucksParser extends Parser {
           List(
             (
               "MANUFAKTURA KRAKOWSKA - burgery i frytki",
-              List("https://www.facebook.com/manufakturakrakowska/photos/a.1579173878964213/2668016340079956/")
+              List("https://www.facebook.com/manufakturakrakowska/photos/pb.100063615941466.-2207520000./3130094757205443")
             )
           )
         case Calendar.THURSDAY =>
