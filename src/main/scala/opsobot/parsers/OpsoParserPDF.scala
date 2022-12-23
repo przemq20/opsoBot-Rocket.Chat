@@ -7,7 +7,7 @@ import org.apache.tika.sax.BodyContentHandler
 import org.jsoup.Jsoup
 
 import java.io.{ File, FileInputStream, FileOutputStream }
-import java.time.ZoneId
+import java.time.{ LocalDate, ZoneId }
 
 object OpsoParserPDF extends Parser {
   val MENU_URL = "https://opso.pl/"
@@ -68,9 +68,11 @@ object OpsoParserPDF extends Parser {
       .toList
 
     val currentDate  = java.time.LocalDate.now
-    val opsoDateText = menuItems.head.takeRight(10)
-    val format       = new java.text.SimpleDateFormat("dd.MM.yyyy")
-    val opsoDate     = format.parse(opsoDateText).toInstant.atZone(ZoneId.systemDefault()).toLocalDate
+    val opsoDateText = menuItems.head.split("\\.")
+    val day   = opsoDateText(0).split(" ")(1).trim.toInt
+    val month = opsoDateText(1).trim.toInt
+    val year  = opsoDateText(2).trim.toInt
+    val opsoDate = LocalDate.of(year, month, day)
     if (opsoDate != currentDate) {
       new Menu
     } else {
