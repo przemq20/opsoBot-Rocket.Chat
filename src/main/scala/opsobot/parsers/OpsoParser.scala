@@ -6,6 +6,7 @@ import org.jsoup.select.Elements
 import java.time.LocalDate
 import scala.jdk.CollectionConverters._
 
+@deprecated
 object OpsoParser extends Parser {
   final val MENU_URL = "https://opso.pl/menu/"
 
