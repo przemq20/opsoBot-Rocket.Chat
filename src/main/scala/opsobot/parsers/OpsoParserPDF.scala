@@ -69,9 +69,9 @@ object OpsoParserPDF extends Parser {
 
     val currentDate  = java.time.LocalDate.now
     val opsoDateText = menuItems.head.split("\\.")
-    val day   = opsoDateText(0).split(" ")(1).trim.toInt
-    val month = opsoDateText(1).trim.toInt
-    val year  = opsoDateText(2).trim.toInt
+    val day   = opsoDateText(0).filter(_.isDigit).trim.toInt
+    val month = opsoDateText(1).filter(_.isDigit).trim.toInt
+    val year  = opsoDateText(2).filter(_.isDigit).trim.toInt
     val opsoDate = LocalDate.of(year, month, day)
     if (opsoDate != currentDate) {
       new Menu
