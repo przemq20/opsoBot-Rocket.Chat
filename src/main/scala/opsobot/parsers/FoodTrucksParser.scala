@@ -26,7 +26,7 @@ object FoodTrucksParser extends Parser {
           )
         case Calendar.THURSDAY =>
           List(
-            ("ROZBRYKANA OWCA - dania inspirowane kuchnią marokańską", List("https://rozbrykanaowca.pl/menu/")),
+//            ("ROZBRYKANA OWCA - dania inspirowane kuchnią marokańską", List("https://rozbrykanaowca.pl/menu/")),
             ("PIEROGOWE LOVE - pierogi", List.empty)
           )
         case Calendar.FRIDAY =>

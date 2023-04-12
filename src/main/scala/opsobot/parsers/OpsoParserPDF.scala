@@ -5,16 +5,17 @@ import org.apache.tika.parser.ParseContext
 import org.apache.tika.parser.pdf.PDFParser
 import org.apache.tika.sax.BodyContentHandler
 import org.jsoup.Jsoup
+import org.jsoup.nodes.Document
 
-import java.io.{ File, FileInputStream, FileOutputStream }
-import java.time.{ LocalDate, ZoneId }
+import java.io.{File, FileInputStream, FileOutputStream}
+import java.time.{LocalDate, ZoneId}
 
 object OpsoParserPDF extends Parser {
   val MENU_URL = "https://opso.pl/"
   val FILEPATH = "file.pdf"
 
   private def getMenuLink: String = {
-    val opsoPage = Jsoup
+    val opsoPage: Document = Jsoup
       .connect(MENU_URL)
       .timeout(100000)
       .ignoreHttpErrors(true)
