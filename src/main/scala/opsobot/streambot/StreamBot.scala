@@ -62,7 +62,8 @@ class StreamBot {
         new MenuMessage("Olimp", OlimpParser.parse()) ::
         new MenuMessage("Makarun", MakarunParser.parse()) ::
         new MenuMessage("Food Trucki", FoodTrucksParser.parse()) ::
-        Nil
+        new MenuMessage("Bobek Burger", BobekParser.parse()) ::
+      Nil
     }
 
   private val sendMenuFlow: Flow[MenuMessage, Unit, NotUsed] = Flow[MenuMessage].map { msg =>
